@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥒 OGYRCHIK GAME</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a0a1a;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* ШАПКА */
+        .header {
+            background: rgba(10, 10, 30, 0.95);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #00FF00;
+        }
+        
+        .balance {
+            font-size: 28px;
+            color: #00FF00;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            background: #00FF00;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        /* КОНТЕНТ */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 50px;
+        }
+        
+        /* НАВИГАЦИЯ */
+        .tabs {
+            display: flex;
+            background: rgba(20, 20, 50, 0.8);
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background: rgba(0, 255, 0, 0.2);
+            border-bottom: 3px solid #00FF00;
+        }
+        
+        /* КРАШ ИГРА */
+        .game-area {
+            background: rgba(20, 20, 50, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .multiplier {
+            font-size: 100px;
+            color: #00FF00;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 0 0 30px #00FF00;
+        }
+        
+        .cucumber {
+            font-size: 80px;
+            margin: 20px 0;
+            filter: drop-shadow(0 0 15px #00FF00);
+        }
+        
+        /* КНОПКИ КРАША */
+        .crash-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .crash-btn {
+            flex: 1;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        
+        .btn-start {
+            background: #00FF00;
+            color: #000;
+        }
+        
+        .btn-cashout {
+            background: #FFD700;
+            color: #000;
+        }
+        
+        /* МИНЫ */
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        
+        .mine-cell {
+            aspect-ratio: 1;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* ИНВЕНТАРЬ */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .nft-item {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00FF00;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .nft-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        /* ЛИДЕРЫ */
+        .leaders-list {
+            margin-top: 20px;
+        }
+        
+        .leader-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        /* ВЫВОД */
+        .withdraw-info {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #FF0000;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .timer {
+            font-size: 24px;
+            color: #FF0000;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        /* АДМИН СТИЛИ */
+        .admin-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 10px;
+            border: 1px solid #00FF00;
+        }
+        
+        .admin-input {
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .log-entry {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            font-size: 12px;
+            border-left: 3px solid #00FF00;
+        }
+        
+        .user-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-banned {
+            background: #FF0000;
+            color: white;
+        }
+        
+        .status-active {
+            background: #00FF00;
+            color: black;
+        }
+        
+        /* БАЛАНС */
+        .balance-zero {
+            color: #FF0000 !important;
+        }
+        
+        /* МОБИЛЬНАЯ */
+        @media (max-width: 768px) {
+            .multiplier { font-size: 70px; }
+            .crash-btn { font-size: 20px; padding: 15px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { min-width: 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ШАПКА -->
+    <div class="header">
+        <div style="font-size: 12px; color: #888;">БАЛАНС</div>
+        <div class="balance balance-zero" id="balance">0 ⭐</div>
+        <div>
+            <button class="btn-small" onclick="showDepositInfo()">ПОПОЛНИТЬ</button>
+            <button class="btn-small" onclick="showWithdraw()">ВЫВОД</button>
+        </div>
+    </div>
+    
+    <!-- КОНТЕНТ -->
+    <div class="container">
+        <!-- НАВИГАЦИЯ -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('crash')">🥒 КРАШ</div>
+            <div class="tab" onclick="switchTab('mines')">💣 МИНЫ</div>
+            <div class="tab" onclick="switchTab('inventory')">📦 ИНВЕНТАРЬ</div>
+            <div class="tab" onclick="switchTab('leaders')">🏆 ЛИДЕРЫ</div>
+            <div class="tab" onclick="switchTab('withdraw')">💰 ВЫВОД</div>
+            <div class="tab" onclick="switchTab('admin')">⚙️ АДМИН</div>
+        </div>
+        
+        <!-- КРАШ ИГРА -->
+        <div id="crash" class="tab-content">
+            <div class="game-area">
+                <div class="multiplier" id="multiplier">1.00x</div>
+                <div class="cucumber" id="cucumber">🥒</div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="number" id="betAmount" value="100" min="10" 
+                           style="padding: 15px; font-size: 20px; width: 200px; text-align: center;
+                                  background: rgba(0,255,0,0.1); border: 2px solid #00FF00;
+                                  border-radius: 10px; color: white;">
+                    <button class="btn-small" onclick="applyBet()">ОК</button>
+                </div>
+                
+                <div style="color: #00FF00; font-size: 18px; margin: 15px 0;">
+                    Ставка: <span id="currentBet">100</span> ⭐
+                </div>
+                
+                <!-- КНОПКИ КРАША ТОЛЬКО ЗДЕСЬ -->
+                <div class="crash-buttons">
+                    <button class="crash-btn btn-start" onclick="startGame()" id="startBtn">СТАРТ</button>
+                    <button class="crash-btn btn-cashout" onclick="cashOut()" id="cashoutBtn" disabled>ВЫВЕСТИ</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- МИНЫ -->
+        <div id="mines" class="tab-content" style="display: none;">
+            <div class="game-area">
+                <h2>💣 ИГРА МИНЫ</h2>
+                <div id="minesMultiplier" style="font-size: 32px; color: #00FF00; margin: 20px 0;">Множитель: 1.00x</div>
+                <div id="minesGrid" class="mines-grid">
+                    <!-- 5x5 поле сгенерируется JS -->
+                </div>
+                <div style="margin: 20px 0;">
+                    <button class="btn-small" onclick="startMines(3)">3 МИНЫ</button>
+                    <button class="btn-small" onclick="startMines(5)">5 МИН</button>
+                    <button class="btn-small" onclick="startMines(8)">8 МИН</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ИНВЕНТАРЬ -->
+        <div id="inventory" class="tab-content" style="display: none;">
+            <div class="game-area">
+                <h2>📦 ВАШ ИНВЕНТАРЬ</h2>
+                <div id="inventoryItems" class="inventory-grid">
+                    <!-- NFT будут загружены через JS -->
+                </div>
+                <div style="margin-top: 20px; color: #888; text-align: center;">
+                    Открывайте кейсы чтобы получать NFT
+                </div>
+            </div>
+        </div>
+        
+        <!-- ЛИДЕРЫ -->
+        <div id="leaders" class="tab-content" style="display: none;">
+            <div class="game-area">
+                <h2>🏆 ТОП ИГРОКОВ</h2>
+                <div id="leadersList" class="leaders-list">
+                    <!-- Лидеры загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- ВЫВОД -->
+        <div id="withdraw" class="tab-content" style="display: none;">
+            <div class="game-area">
+                <h2>💰 ВЫВОД СРЕДСТВ</h2>
+                
+                <div class="withdraw-info" id="withdrawBlocked">
+                    <div style="color: #FF0000; font-size: 20px; margin-bottom: 10px;">
+                        ⚠️ ВЫВОД ЗАБЛОКИРОВАН
+                    </div>
+                    <div>Для вывода нужно играть минимум 5 дней</div>
+                    <div class="timer" id="withdrawTimer">До вывода: 5 дней</div>
+                    <div style="color: #888; font-size: 14px; margin-top: 10px;">
+                        Начали играть: <span id="startDate">Сегодня</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <div style="color: #00FF00; font-size: 18px; margin-bottom: 10px;">
+                        Доступно для вывода: <span id="availableForWithdraw">0</span> ⭐
+                    </div>
+                    <input type="number" id="withdrawAmount" placeholder="Сумма для вывода" 
+                           style="padding: 15px; width: 100%; font-size: 18px; margin-bottom: 15px;
+                                  background: rgba(0,255,0,0.1); border: 2px solid #00FF00;
+                                  border-radius: 10px; color: white;">
+                    <button class="btn-small" style="width: 100%; padding: 20px; font-size: 20px;"
+                            onclick="requestWithdraw()" id="withdrawBtn" disabled>
+                        ЗАПРОСИТЬ ВЫВОД
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- АДМИН -->
+        <div id="admin" class="tab-content" style="display: none;">
+            <div class="game-area">
+                <h2>⚙️ АДМИН ПАНЕЛЬ</h2>
+                
+                <div style="margin: 20px 0;">
+                    <input type="password" id="adminPassword" placeholder="АДМИН ПАРОЛЬ" 
+                           class="admin-input">
+                    <button class="btn-small" style="width: 100%; padding: 20px; font-size: 20px;"
+                            onclick="adminLogin()">
+                        ВОЙТИ
+                    </button>
+                </div>
+                
+                <div id="adminPanel" style="display: none;">
+                    <div style="color: #00FF00; margin: 20px 0; font-size: 18px;">
+                        ✅ Вы вошли как админ: @OGYRCHIK_RELAYER
+                    </div>
+                    
+                    <!-- УПРАВЛЕНИЕ ИГРОКАМИ -->
+                    <div class="admin-section">
+                        <h3>👤 УПРАВЛЕНИЕ ИГРОКАМИ</h3>
+                        
+                        <input type="text" id="playerUsername" placeholder="@username игрока" 
+                               class="admin-input">
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="number" id="addStars" placeholder="Добавить ⭐" 
+                                   class="admin-input" style="flex: 1;">
+                            <input type="number" id="removeStars" placeholder="Забрать ⭐" 
+                                   class="admin-input" style="flex: 1;">
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-small" style="flex: 1;" onclick="addStarsToPlayer()">
+                                НАЧИСЛИТЬ ⭐
+                            </button>
+                            <button class="btn-small" style="flex: 1;" onclick="removeStarsFromPlayer()">
+                                ЗАБРАТЬ ⭐
+                            </button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="btn-small" style="flex: 1; background: #FF0000;" onclick="banPlayer()">
+                                ЗАБАНИТЬ
+                            </button>
+                            <button class="btn-small" style="flex: 1; background: #00FF00;" onclick="unbanPlayer()">
+                                РАЗБАНИТЬ
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- ПРОМОКОДЫ -->
+                    <div class="admin-section">
+                        <h3>🎫 ПРОМОКОДЫ</h3>
+                        
+                        <input type="text" id="promoCode" placeholder="НОВЫЙ ПРОМОКОД" 
+                               class="admin-input">
+                        
+                        <input type="number" id="promoAmount" placeholder="СУММА В ⭐" 
+                               class="admin-input">
+                        
+                        <button class="btn-small" style="width: 100%; margin-bottom: 10px;"
+                                onclick="createPromo()">
+                            СОЗДАТЬ ПРОМОКОД
+                        </button>
+                    </div>
+                    
+                    <!-- ЛОГИ -->
+                    <div class="admin-section">
+                        <h3>📊 ЛОГИ ИГРЫ</h3>
+                        <button class="btn-small" style="width: 100%; margin-bottom: 10px;"
+                                onclick="showGameLogs()">
+                            ПОКАЗАТЬ ЛОГИ
+                        </button>
+                        <button class="btn-small" style="width: 100%; margin-bottom: 10px; background: #FF0000;"
+                                onclick="clearAllLogs()">
+                            ОЧИСТИТЬ ВСЕ ЛОГИ
+                        </button>
+                        <div id="gameLogs" style="max-height: 300px; overflow-y: auto; margin-top: 10px;">
+                            <!-- Логи будут загружены здесь -->
+                        </div>
+                    </div>
+                    
+                    <!-- СООБЩЕНИЕ -->
+                    <div id="adminMessage" style="margin-top: 20px; padding: 15px; border-radius: 10px;
+                                                 background: rgba(0,255,0,0.1);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+        let balance = 0;
+        let currentBet = 100;
+        let gameActive = false;
+        let minesGame = null;
+        let inventory = [];
+        let leaders = [];
+        let startDate = new Date();
+        let withdrawAvailable = false;
+        let daysPlayed = 0;
+        let gameInterval = null;
+        
+        // АДМИН
+        const ADMIN_USERNAME = '@OGYRCHIK_RELAYER';
+        const ADMIN_PASSWORD = 'ogyrchik123';
+        let adminLoggedIn = false;
+        
+        // БАН ЛИСТ
+        let bannedPlayers = JSON.parse(localStorage.getItem('banned_players') || '{}');
+        
+        // ИНИЦИАЛИЗАЦИЯ
+        function init() {
+            loadGameData();
+            updateUI();
+            generateMinesGrid();
+            loadLeaders();
+            loadInventory();
+            updateWithdrawTimer();
+            
+            // Проверка на бан
+            checkIfBanned();
+        }
+        
+        // Проверка на бан
+        function checkIfBanned() {
+            if (typeof Telegram !== 'undefined') {
+                const tg = Telegram.WebApp;
+                if (tg.initDataUnsafe.user) {
+                    const user = tg.initDataUnsafe.user;
+                    const username = user.username || user.id.toString();
+                    if (bannedPlayers[username]) {
+                        alert('⛔ ВЫ ЗАБАНЕНЫ!');
+                        disableGame();
+                    }
+                }
+            }
+        }
+        
+        function disableGame() {
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('cashoutBtn').disabled = true;
+            document.querySelectorAll('.btn-small').forEach(btn => btn.disabled = true);
+        }
+        
+        // ЗАГРУЗКА ДАННЫХ
+        function loadGameData() {
+            const saved = localStorage.getItem('ogyrchik_game');
+            if (saved) {
+                const data = JSON.parse(saved);
+                balance = data.balance || 0;
+                inventory = data.inventory || [];
+                startDate = new Date(data.startDate || new Date());
+                daysPlayed = data.daysPlayed || 0;
+                
+                // Проверяем 5 дней
+                const today = new Date();
+                const diffTime = today - startDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                daysPlayed = diffDays;
+                
+                if (daysPlayed >= 5) {
+                    withdrawAvailable = true;
+                }
+            } else {
+                // Новая игра
+                balance = 0;
+                inventory = [];
+                startDate = new Date();
+                daysPlayed = 0;
+                withdrawAvailable = false;
+                saveGameData();
+            }
+        }
+        
+        // СОХРАНЕНИЕ ДАННЫХ
+        function saveGameData() {
+            const data = {
+                balance: balance,
+                inventory: inventory,
+                startDate: startDate,
+                daysPlayed: daysPlayed
+            };
+            localStorage.setItem('ogyrchik_game', JSON.stringify(data));
+        }
+        
+        // ОБНОВЛЕНИЕ UI
+        function updateUI() {
+            document.getElementById('balance').textContent = balance + ' ⭐';
+            document.getElementById('currentBet').textContent = currentBet;
+            document.getElementById('betAmount').value = currentBet;
+            document.getElementById('availableForWithdraw').textContent = Math.max(0, balance - 100);
+            
+            // Баланс 0 - красный цвет
+            if (balance === 0) {
+                document.getElementById('balance').classList.add('balance-zero');
+            } else {
+                document.getElementById('balance').classList.remove('balance-zero');
+            }
+            
+            // Кнопка вывода
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const available = Math.max(0, balance - 100);
+            if (withdrawAvailable && available > 0) {
+                withdrawBtn.disabled = false;
+                withdrawBtn.style.background = '#00FF00';
+            } else {
+                withdrawBtn.disabled = true;
+                withdrawBtn.style.background = '#666';
+            }
+            
+            // Дата начала
+            document.getElementById('startDate').textContent = startDate.toLocaleDateString();
+        }
+        
+        // ТАЙМЕР ВЫВОДА
+        function updateWithdrawTimer() {
+            const daysLeft = 5 - daysPlayed;
+            const timer = document.getElementById('withdrawTimer');
+            
+            if (daysLeft > 0) {
+                timer.textContent = `До вывода: ${daysLeft} дней`;
+                timer.style.color = '#FF0000';
+            } else {
+                timer.textContent = '✅ ВЫВОД ДОСТУПЕН';
+                timer.style.color = '#00FF00';
+            }
+        }
+        
+        // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).style.display = 'block';
+            event.target.classList.add('active');
+            
+            // Обновляем контент вкладки
+            if (tabName === 'inventory') {
+                loadInventory();
+            } else if (tabName === 'leaders') {
+                loadLeaders();
+            }
+        }
+        
+        // ПРИМЕНИТЬ СТАВКУ
+        function applyBet() {
+            const input = document.getElementById('betAmount');
+            let bet = parseInt(input.value);
+            
+            if (bet < 10) {
+                alert('Минимальная ставка: 10⭐');
+                return;
+            }
+            
+            if (bet > balance) {
+                alert('Недостаточно Stars!');
+                return;
+            }
+            
+            currentBet = bet;
+            updateUI();
+        }
+        
+        // КРАШ ИГРА
+        function startGame() {
+            if (balance < currentBet) {
+                alert('Недостаточно Stars!');
+                return;
+            }
+            
+            if (gameActive) return;
+            
+            // Снимаем ставку
+            balance -= currentBet;
+            updateUI();
+            
+            // Начинаем игру
+            gameActive = true;
+            document.getElementById('cashoutBtn').disabled = false;
+            document.getElementById('startBtn').disabled = true;
+            
+            let multiplier = 1.00;
+            const multiplierElement = document.getElementById('multiplier');
+            const cucumber = document.getElementById('cucumber');
+            
+            // Анимация огурчика
+            cucumber.style.transition = 'all 0.1s linear';
+            let cucumberHeight = 0;
+            
+            // Генерируем случайный краш-точку
+            const crashPoint = 1.0 + Math.random() * 10.0;
+            
+            // Запускаем игру
+            gameInterval = setInterval(() => {
+                multiplier += 0.01;
+                multiplierElement.textContent = multiplier.toFixed(2) + 'x';
+                
+                // Анимация огурчика
+                cucumberHeight += 2;
+                cucumber.style.marginBottom = cucumberHeight + 'px';
+                
+                // Изменение размера
+                const size = 80 + (multiplier * 5);
+                cucumber.style.fontSize = Math.min(size, 120) + 'px';
+                
+                // Проверка на краш
+                if (multiplier >= crashPoint) {
+                    endGame(false, multiplier);
+                }
+            }, 100);
+            
+            // Логируем начало игры
+            addToLog('ИГРА', `Начата краш-игра со ставкой ${currentBet}⭐`);
+        }
+        
+        function cashOut() {
+            if (!gameActive) return;
+            
+            const multiplier = parseFloat(document.getElementById('multiplier').textContent);
+            endGame(true, multiplier);
+        }
+        
+        function endGame(isWin, finalMultiplier) {
+            if (!gameActive) return;
+            
+            // Останавливаем интервал
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = null;
+            }
+            
+            gameActive = false;
+            
+            if (isWin) {
+                const winAmount = Math.floor(currentBet * finalMultiplier);
+                balance += winAmount;
+                showWinAnimation(winAmount);
+                addToHistory('Краш', winAmount, true);
+                addToLog('ВЫИГРЫШ', `Краш: +${winAmount}⭐ (x${finalMultiplier.toFixed(2)})`);
+                
+                setTimeout(() => {
+                    alert(`🎉 ПОБЕДА! +${winAmount}⭐`);
+                }, 300);
+            } else {
+                // Анимация взрыва
+                const explosion = document.createElement('div');
+                explosion.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 100px;
+                    z-index: 1000;
+                    animation: explode 1s forwards;
+                `;
+                explosion.textContent = '💥';
+                document.body.appendChild(explosion);
+                
+                setTimeout(() => explosion.remove(), 1000);
+                
+                addToHistory('Краш', -currentBet, false);
+                addToLog('ПРОИГРЫШ', `Краш: -${currentBet}⭐ (краш на x${finalMultiplier.toFixed(2)})`);
+                
+                setTimeout(() => {
+                    alert('💥 КРАШ! Вы проиграли');
+                }, 300);
+            }
+            
+            // Сброс состояния
+            setTimeout(() => {
+                document.getElementById('cashoutBtn').disabled = true;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('multiplier').textContent = '1.00x';
+                document.getElementById('cucumber').style.marginBottom = '0';
+                document.getElementById('cucumber').style.fontSize = '80px';
+                
+                updateUI();
+                saveGameData();
+            }, 500);
+        }
+        
+        // МИНЫ
+        function generateMinesGrid() {
+            const grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.textContent = '❓';
+                cell.onclick = () => openMineCell(i);
+                grid.appendChild(cell);
+            }
+        }
+        
+        function startMines(minesCount) {
+            if (balance < currentBet) {
+                alert('Недостаточно Stars!');
+                return;
+            }
+            
+            balance -= currentBet;
+            updateUI();
+            
+            minesGame = {
+                cells: Array(25).fill(0),
+                mines: minesCount,
+                opened: 0,
+                multiplier: 1.00,
+                active: true
+            };
+            
+            // Расставляем мины
+            for (let i = 0; i < minesCount; i++) {
+                let pos;
+                do {
+                    pos = Math.floor(Math.random() * 25);
+                } while (minesGame.cells[pos] === 1);
+                minesGame.cells[pos] = 1;
+            }
+            
+            document.getElementById('minesMultiplier').textContent = 'Множитель: 1.00x';
+            generateMinesGrid();
+            
+            addToLog('ИГРА', `Начата игра Мины с ${minesCount} минами, ставка ${currentBet}⭐`);
+        }
+        
+        function openMineCell(index) {
+            if (!minesGame || !minesGame.active) return;
+            
+            const cell = document.getElementById('minesGrid').children[index];
+            
+            if (minesGame.cells[index] === 1) {
+                // МИНА
+                cell.textContent = '💣';
+                cell.style.background = 'rgba(255,0,0,0.3)';
+                minesGame.active = false;
+                
+                setTimeout(() => {
+                    alert('💣 ВЗРЫВ! Вы проиграли');
+                    addToHistory('Мины', -currentBet, false);
+                    addToLog('ПРОИГРЫШ', `Мины: -${currentBet}⭐ (найдена мина)`);
+                    resetMinesGame();
+                }, 500);
+                
+            } else {
+                // БЕЗОПАСНО
+                cell.textContent = '✅';
+                cell.style.background = 'rgba(0,255,0,0.3)';
+                minesGame.opened++;
+                
+                // ФИКСИРОВАННЫЙ МНОЖИТЕЛЬ
+                const safeCells = 25 - minesGame.mines;
+                const remainingSafe = safeCells - minesGame.opened;
+                minesGame.multiplier = (25 / (25 - minesGame.mines)) * 
+                                      (remainingSafe / safeCells) * 1.5;
+                
+                document.getElementById('minesMultiplier').textContent = 
+                    `Множитель: ${minesGame.multiplier.toFixed(2)}x`;
+                
+                // Проверка победы
+                if (minesGame.opened === safeCells) {
+                    const winAmount = Math.floor(currentBet * minesGame.multiplier);
+                    balance += winAmount;
+                    
+                    setTimeout(() => {
+                        alert(`🎉 ПОБЕДА! +${winAmount}⭐`);
+                        showWinAnimation(winAmount);
+                        addToHistory('Мины', winAmount, true);
+                        addToLog('ВЫИГРЫШ', `Мины: +${winAmount}⭐ (x${minesGame.multiplier.toFixed(2)})`);
+                        resetMinesGame();
+                    }, 500);
+                }
+            }
+            
+            updateUI();
+            saveGameData();
+        }
+        
+        function resetMinesGame() {
+            minesGame = null;
+            generateMinesGrid();
+            document.getElementById('minesMultiplier').textContent = 'Множитель: 1.00x';
+        }
+        
+        // ИНВЕНТАРЬ
+        function loadInventory() {
+            const container = document.getElementById('inventoryItems');
+            
+            if (inventory.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
+                        Инвентарь пуст<br>
+                        Открывайте кейсы для получения NFT
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            inventory.forEach((item, index) => {
+                const nft = document.createElement('div');
+                nft.className = 'nft-item';
+                nft.innerHTML = `
+                    <div class="nft-icon">${item.emoji}</div>
+                    <div style="font-weight: bold;">${item.name}</div>
+                    <div style="color: #00FF00; font-size: 14px;">${item.value} ⭐</div>
+                    <div style="color: #888; font-size: 12px;">${item.rarity}</div>
+                `;
+                container.appendChild(nft);
+            });
+        }
+        
+        // ЛИДЕРЫ
+        function loadLeaders() {
+            const container = document.getElementById('leadersList');
+            
+            // Загружаем реальных игроков из localStorage
+            const allPlayers = JSON.parse(localStorage.getItem('all_players') || '{}');
+            let playersArray = [];
+            
+            // Добавляем текущего игрока
+            let currentUsername = 'Вы';
+            if (typeof Telegram !== 'undefined') {
+                const tg = Telegram.WebApp;
+                if (tg.initDataUnsafe.user) {
+                    currentUsername = tg.initDataUnsafe.user.username || 'Вы';
+                }
+            }
+            
+            playersArray.push({
+                name: currentUsername,
+                stars: balance,
+                wins: inventory.length,
+                isCurrent: true
+            });
+            
+            // Добавляем других игроков
+            Object.keys(allPlayers).forEach(username => {
+                if (username !== currentUsername) {
+                    playersArray.push({
+                        name: username,
+                        stars: allPlayers[username].balance || 0,
+                        wins: allPlayers[username].wins || 0,
+                        isCurrent: false,
+                        banned: bannedPlayers[username]
+                    });
+                }
+            });
+            
+            // Сортируем по звездам
+            playersArray.sort((a, b) => b.stars - a.stars);
+            
+            container.innerHTML = '';
+            playersArray.forEach((player, index) => {
+                const row = document.createElement('div');
+                row.className = 'leader-row';
+                
+                const status = player.banned ? '<span style="color: #FF0000;"> [БАН]</span>' : '';
+                const nameColor = player.isCurrent ? '#00FF00' : 'white';
+                
+                row.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="font-weight: bold; color: ${nameColor}">
+                            ${index + 1}. ${player.name}${status}
+                        </div>
+                        ${player.banned ? '<span class="user-status status-banned">БАН</span>' : 
+                          '<span class="user-status status-active">АКТИВЕН</span>'}
+                    </div>
+                    <div>
+                        <div style="color: #00FF00;">${player.stars} ⭐</div>
+                        <div style="color: #888; font-size: 12px;">${player.wins} побед</div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+        
+        // ПОПОЛНЕНИЕ БАЛАНСА
+        function showDepositInfo() {
+            alert('💰 ДЛЯ ПОПОЛНЕНИЯ БАЛАНСА:\n\n1. Напишите @OGYRCHIK_RELAYER в Telegram\n2. Укажите сумму пополнения\n3. Отправьте свой username\n\nПосле подтверждения средства поступят автоматически!');
+        }
+        
+        // ВЫВОД
+        function showWithdraw() {
+            switchTab('withdraw');
+        }
+        
+        function requestWithdraw() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value);
+            const available = Math.max(0, balance - 100);
+            
+            if (!withdrawAvailable) {
+                alert('Вывод доступен после 5 дней игры!');
+                return;
+            }
+            
+            if (amount < 100) {
+                alert('Минимальная сумма вывода: 100⭐');
+                return;
+            }
+            
+            if (amount > available) {
+                alert(`Максимально можно вывести: ${available}⭐`);
+                return;
+            }
+            
+            if (confirm(`Запросить вывод ${amount}⭐?\nВы получите их через 24 часа.`)) {
+                balance -= amount;
+                updateUI();
+                saveGameData();
+                
+                addToLog('ВЫВОД', `Запрошен вывод ${amount}⭐`);
+                alert(`✅ Запрос на вывод ${amount}⭐ принят!\nСредства поступят в течение 24 часов.`);
+                
+                document.getElementById('withdrawAmount').value = '';
+            }
+        }
+        
+        // АДМИН ПАНЕЛЬ
+        function adminLogin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD || adminLoggedIn) {
+                adminLoggedIn = true;
+                showAdminPanel();
+                showAdminMessage('✅ Админ авторизован', 'success');
+            } else {
+                showAdminMessage('❌ Неверный пароль', 'error');
+            }
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('adminPassword').style.display = 'none';
+            document.querySelector('#admin .btn-small').style.display = 'none';
+        }
+        
+        function showAdminMessage(message, type) {
+            const msgDiv = document.getElementById('adminMessage');
+            const color = type === 'success' ? '#00FF00' : '#FF0000';
+            msgDiv.innerHTML = `<span style="color: ${color};">${message}</span>`;
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+        }
+        
+        // ЗАБРАТЬ ЗВЕЗДЫ У ИГРОКА
+        function removeStarsFromPlayer() {
+            if (!adminLoggedIn) return;
+            
+            const username = document.getElementById('playerUsername').value.trim();
+            const stars = parseInt(document.getElementById('removeStars').value);
+            
+            if (!username || !stars || stars <= 0) {
+                showAdminMessage('❌ Заполните все поля правильно', 'error');
+                return;
+            }
+            
+            if (username === '@OGYRCHIK_RELAYER' || username === 'OGYRCHIK_RELAYER') {
+                balance = Math.max(0, balance - stars);
+                updateUI();
+                saveGameData();
+                
+                addToLog('АДМИН', `У игрока ${username} забрано ${stars}⭐`);
+                showAdminMessage(`✅ У вас забрано ${stars}⭐<br>Новый баланс: ${balance}⭐`, 'success');
+            } else {
+                addToLog('АДМИН', `Команда: забрать ${stars}⭐ у игрока ${username}`);
+                showAdminMessage(`✅ Команда отправлена<br>У игрока ${username} будет забрано ${stars}⭐`, 'success');
+            }
+            
+            document.getElementById('removeStars').value = '';
+        }
+        
+        // БАН ИГРОКА
+        function banPlayer() {
+            if (!adminLoggedIn) return;
+            
+            const username = document.getElementById('playerUsername').value.trim();
+            if (!username) {
+                showAdminMessage('❌ Введите username игрока', 'error');
+                return;
+            }
+            
+            bannedPlayers[username] = true;
+            localStorage.setItem('banned_players', JSON.stringify(bannedPlayers));
+            
+            addToLog('АДМИН', `Игрок ${username} забанен`);
+            showAdminMessage(`✅ Игрок ${username} забанен`, 'success');
+            
+            loadLeaders();
+        }
+        
+        function unbanPlayer() {
+            if (!adminLoggedIn) return;
+            
+            const username = document.getElementById('playerUsername').value.trim();
+            if (!username) {
+                showAdminMessage('❌ Введите username игрока', 'error');
+                return;
+            }
+            
+            delete bannedPlayers[username];
+            localStorage.setItem('banned_players', JSON.stringify(bannedPlayers));
+            
+            addToLog('АДМИН', `Игрок ${username} разбанен`);
+            showAdminMessage(`✅ Игрок ${username} разбанен`, 'success');
+            
+            loadLeaders();
+        }
+        
+        function createPromo() {
+            if (!adminLoggedIn) return;
+            
+            const code = document.getElementById('promoCode').value.trim().toUpperCase();
+            const amount = parseInt(document.getElementById('promoAmount').value);
+            
+            if (!code || !amount || amount <= 0) {
+                showAdminMessage('❌ Заполните все поля правильно', 'error');
+                return;
+            }
+            
+            const promos = JSON.parse(localStorage.getItem('promo_codes') || '{}');
+            promos[code] = { 
+                amount: amount, 
+                used: 0, 
+                maxUses: 100,
+                created: new Date().toLocaleString()
+            };
+            localStorage.setItem('promo_codes', JSON.stringify(promos));
+            
+            addToLog('АДМИН', `Создан промокод ${code} на ${amount}⭐`);
+            showAdminMessage(`✅ Промокод создан!<br>Код: <strong>${code}</strong><br>Сумма: ${amount}⭐`, 'success');
+            
+            document.getElementById('promoCode').value = '';
+            document.getElementById('promoAmount').value = '';
+        }
+        
+        // ПОКАЗАТЬ ЛОГИ
+        function showGameLogs() {
+            const logsContainer = document.getElementById('gameLogs');
+            const logs = JSON.parse(localStorage.getItem('admin_logs') || '[]');
+            
+            if (logs.length === 0) {
+                logsContainer.innerHTML = '<div class="log-entry">Логов пока нет</div>';
+                return;
+            }
+            
+            logsContainer.innerHTML = '';
+            logs.slice(-20).reverse().forEach(log => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `
+                    <div><strong>${log.time}</strong></div>
+                    <div>${log.action}: ${log.details}</div>
+                `;
+                logsContainer.appendChild(entry);
+            });
+        }
+        
+        function clearAllLogs() {
+            if (confirm('Очистить все логи?')) {
+                localStorage.removeItem('admin_logs');
+                showGameLogs();
+                showAdminMessage('✅ Все логи очищены', 'success');
+            }
+        }
+        
+        // ДОБАВИТЬ ЗВЕЗДЫ ИГРОКУ
+        function addStarsToPlayer() {
+            if (!adminLoggedIn) return;
+            
+            const username = document.getElementById('playerUsername').value.trim();
+            const stars = parseInt(document.getElementById('addStars').value);
+            
+            if (!username || !stars || stars <= 0) {
+                showAdminMessage('❌ Заполните все поля правильно', 'error');
+                return;
+            }
+            
+            if (username === '@OGYRCHIK_RELAYER' || username === 'OGYRCHIK_RELAYER') {
+                balance += stars;
+                updateUI();
+                saveGameData();
+                
+                addToLog('АДМИН', `Игроку ${username} начислено ${stars}⭐`);
+                showAdminMessage(`✅ Вам начислено ${stars}⭐<br>Новый баланс: ${balance}⭐`, 'success');
+            } else {
+                const allPlayers = JSON.parse(localStorage.getItem('all_players') || '{}');
+                if (!allPlayers[username]) {
+                    allPlayers[username] = { balance: 0, wins: 0 };
+                }
+                allPlayers[username].balance = (allPlayers[username].balance || 0) + stars;
+                localStorage.setItem('all_players', JSON.stringify(allPlayers));
+                
+                addToLog('АДМИН', `Игроку ${username} начислено ${stars}⭐`);
+                showAdminMessage(`✅ Игроку ${username} начислено ${stars}⭐`, 'success');
+            }
+            
+            document.getElementById('addStars').value = '';
+        }
+        
+        // ЛОГИРОВАНИЕ
+        function addToLog(action, details) {
+            const logs = JSON.parse(localStorage.getItem('admin_logs') || '[]');
+            logs.push({
+                action: action,
+                details: details,
+                time: new Date().toLocaleString()
+            });
+            
+            if (logs.length > 1000) {
+                logs.splice(0, logs.length - 1000);
+            }
+            
+            localStorage.setItem('admin_logs', JSON.stringify(logs));
+        }
+        
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        function showWinAnimation(amount) {
+            const win = document.createElement('div');
+            win.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 60px;
+                color: #00FF00;
+                z-index: 1000;
+                animation: floatUp 2s forwards;
+            `;
+            win.textContent = `+${amount}⭐`;
+            document.body.appendChild(win);
+            
+            setTimeout(() => win.remove(), 2000);
+        }
+        
+        function addToHistory(gameType, amount, isWin) {
+            const history = JSON.parse(localStorage.getItem('game_history') || '[]');
+            history.push({
+                game: gameType,
+                amount: amount,
+                win: isWin,
+                time: new Date().toLocaleString()
+            });
+            
+            if (history.length > 20) history.shift();
+            localStorage.setItem('game_history', JSON.stringify(history));
+        }
+        
+        // ЗАПУСК
+        window.onload = init;
+        
+        // Стили анимаций
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+            }
+            
+            @keyframes floatUp {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+                100% { transform: translate(-50%, -150%) scale(0.5); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
